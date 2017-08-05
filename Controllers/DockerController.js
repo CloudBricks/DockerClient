@@ -7,12 +7,8 @@ function DockerController() {
 }
 DockerController.prototype.createBlock = function(options) {
     const self = this;
-    const containerConfig = {
-        Image: options.Image,
-        name: options.name
-    }
     console.log(`Block ${options.name} is being created.`);
-    return this.docker.createContainer(containerConfig)
+    return this.docker.createContainer(options)
         .then(function(container) {
             console.log(`Block ${options.name} successfully created.`);
             return container.start();
