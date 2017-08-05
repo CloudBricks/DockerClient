@@ -34,4 +34,15 @@ DockerController.prototype.stopBlock = function(options) {
         });
 }
 
+DockerController.prototype.stopAllBlocks = function() {
+    for (var name in this.blocks) {
+        if (name !== 'socketserver' && this.blocks[name]) {
+            this.stopBlock({ name: name })
+                .catch(function(err) {
+                    console.log(err);
+                });
+        }
+    }
+}
+
 module.exports = DockerController;
