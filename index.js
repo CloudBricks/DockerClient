@@ -68,6 +68,9 @@ controller.createBlock(socketServerOpt)
                             `ID=${i}`,
                             `LISTEN=${(i+1==data.length)?0:i+1}`
                         ]
+                        for (var attr in data.bind) {
+                            httpBodyOpt.Env.push(attr + '=' + data.bind[attr]);
+                        }
                         console.log(JSON.stringify(httpBodyOpt))
                         controller.createBlock(httpBodyOpt);
                         break;
