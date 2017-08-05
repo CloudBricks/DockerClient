@@ -1,15 +1,18 @@
-var Docker = require('dockerode');
-var fs = require('fs');
+const DockerController = require("./Controllers/DockerController");
 
-var socket = process.env.DOCKER_SOCKET || '/var/run/docker.sock';
-var stats = fs.statSync(socket);
+const controller = new DockerController();
 
-if (!stats.isSocket()) {
-    throw new Error('Are you sure the docker is running?');
-}
-
-var docker = new Docker({ socketPath: socket });
-
-docker.run('hello-world', [], process.stdout, function(err, data, container) {
-    console.log(data.StatusCode);
-});
+controller.createBlock({ Image: "hello-world", name: "hello-world-block" })
+    .then(function() {
+        console.log('created');
+        controller.stopBlock({ name: "hello-world-block" })
+            .then(function() {
+                console.log('removed');
+            })
+            .catch(function(err) {
+                console.log('failed: ' + err);
+            })
+    })
+    .catch(function(err) {
+        console.log('failed: ' + err);
+    });

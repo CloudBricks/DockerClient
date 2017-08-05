@@ -1,0 +1,4 @@
+class Block {
+    image;
+    serviceName;
+}
