@@ -44,6 +44,22 @@ const transformUpperCaseOpt = {
 
 }
 
+
+const concatOpt = {
+    Image: "concat",
+    NetworkingConfig: {
+        EndpointsConfig: {
+            "scratch_docker": {}
+        }
+    },
+    "Env": [
+        "ID=2",
+        "LISTEN=1"
+    ],
+    name: "concat"
+
+}
+
 controller.createBlock(socketServerOpt)
     .catch(function(err) {
         console.log("Error Created SocketServer: " + err);
@@ -62,11 +78,14 @@ controller.createBlock(socketServerOpt)
                 console.log("waiting for all containers to stop", 8000);
             })
             for (var i = 0; i < data.length; ++i) {
+                console.log(JSON.stringify(data[i]));
+                const listen = (i == 0) ? data.length - 1 : i - 1;
                 switch (data[i].title) {
+
                     case 'httpbodyserver':
                         httpBodyOpt.Env = [
                             `ID=${i}`,
-                            `LISTEN=${(i==0)?data.length-1:(i+1==data.length)?0:i+1}`
+                            `LISTEN=${listen}`
                         ]
                         for (var attr in data.bind) {
                             httpBodyOpt.Env.push(attr + '=' + data.bind[attr]);
@@ -75,12 +94,23 @@ controller.createBlock(socketServerOpt)
                         controller.createBlock(httpBodyOpt);
                         break;
                     case 'touppercaseserver':
+                        transformUpperCaseOpt.name = transformUpperCaseOpt.name + i;
                         transformUpperCaseOpt.Env = [
                             `ID=${i}`,
-                            `LISTEN=${(i==0)?data.length-1:(i+1==data.length)?0:i+1}`
+                            `LISTEN=${listen}`
                         ]
                         console.log(JSON.stringify(transformUpperCaseOpt))
                         controller.createBlock(transformUpperCaseOpt);
+                        break;
+                    case 'concat':
+                        concatOpt.name = concatOpt.name + i;
+                        concatOpt.Env = [
+                            `ID=${i}`,
+                            `LISTEN=${listen}`,
+                            `CONCAT=${data[i].bind.concat}`
+                        ]
+                        console.log(JSON.stringify(concatOpt));
+                        controller.createBlock(concatOpt);
                         break;
                     default:
                         console.log("unimplemented block");

@@ -31,6 +31,7 @@ DockerController.prototype.stopBlock = function(options) {
         })
         .then(function(data) {
             console.log(`Block ${options.name} is removed.`);
+            delete self.blocks[options.name];
         });
 }
 
