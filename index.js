@@ -66,7 +66,7 @@ controller.createBlock(socketServerOpt)
                     case 'httpbodyserver':
                         httpBodyOpt.Env = [
                             `ID=${i}`,
-                            `LISTEN=${(i+1==data.length)?0:i+1}`
+                            `LISTEN=${(i==0)?data.length-1:(i+1==data.length)?0:i+1}`
                         ]
                         for (var attr in data.bind) {
                             httpBodyOpt.Env.push(attr + '=' + data.bind[attr]);
@@ -77,7 +77,7 @@ controller.createBlock(socketServerOpt)
                     case 'touppercaseserver':
                         transformUpperCaseOpt.Env = [
                             `ID=${i}`,
-                            `LISTEN=${(i+1==data.length)?0:i+1}`
+                            `LISTEN=${(i==0)?data.length-1:(i+1==data.length)?0:i+1}`
                         ]
                         console.log(JSON.stringify(transformUpperCaseOpt))
                         controller.createBlock(transformUpperCaseOpt);
